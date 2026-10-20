@@ -1,0 +1,4 @@
+app/internal/redact/redact_test.go
+app/vendor/github.com/jackc/pgx/v5/pgconn/config.go
+app/vendor/github.com/jackc/pgx/v5/pgxpool/pool.go
+\.git/

@@ -1,0 +1,5 @@
+[extend]
+useDefault = true
+[allowlist]
+description = "Synthetic test fixtures for the redaction/provider tests"
+paths = ['''app/internal/redact/redact_test\.go''', '''app/internal/provider/provider_test\.go''']

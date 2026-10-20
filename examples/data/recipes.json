@@ -1,0 +1,14 @@
+[
+  {"title": "Recargar nginx sin cortar conexiones", "project": "demo-api",
+   "problem": "Cambié la configuración de nginx y necesito aplicarla sin downtime.",
+   "solution": "Validar la sintaxis y recargar en caliente; reload no corta las conexiones activas.",
+   "code": "sudo nginx -t && sudo systemctl reload nginx",
+   "evidence": "curl -I https://staging.example.com/healthz -> HTTP/2 200", "approved_by": "demo-reviewer"},
+  {"title": "Crear índice HNSW en pgvector", "project": "acme-webshop",
+   "problem": "Las búsquedas por similitud son lentas con muchos embeddings.",
+   "solution": "Crear un índice HNSW con la métrica de coseno; construirlo CONCURRENTLY para no bloquear escrituras.",
+   "code": "CREATE INDEX CONCURRENTLY ON chunk_embeddings USING hnsw (embedding vector_cosine_ops);"},
+  {"title": "Rotar un token de API", "project": "demo-api",
+   "problem": "Un token pudo haberse expuesto en un log.",
+   "solution": "Emitir uno nuevo, actualizar el cliente y revocar el anterior (revoked_at). Nunca registrar tokens en logs."}
+]

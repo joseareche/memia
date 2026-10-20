@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#f8fafc">
+<title>Chat · Memia</title><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/chat/static/app.css"><!--COMMERCIAL_CSS--></head>
+<body class="chat-page">
+<svg width="0" height="0" class="sprite" aria-hidden="true"><defs>
+  <symbol id="i-panel" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></symbol>
+  <symbol id="i-notes" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
+  <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></symbol>
+  <symbol id="i-todo" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8.5 12 2.5 2.5 4.5-5"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-quote" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M9 13h6M9 17h3M12 9.5v-1"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+</defs></svg>
+<div class="app" id="app">
+  <!-- ChatRail: icon-only, always visible on desktop/tablet -->
+  <nav class="rail" aria-label="Barra de iconos">
+    <span class="rail-avatar top" aria-hidden="true">M</span>
+    <button class="rail-btn active" id="rail-chats" type="button" aria-label="Conversaciones" data-tip="Conversaciones"><svg class="ic" width="18" height="18"><use href="#i-chat"/></svg></button>
+    <button class="rail-btn" id="rail-new" type="button" aria-label="Nueva conversación" data-tip="Nueva conversación"><svg class="ic" width="18" height="18"><use href="#i-plus"/></svg></button>
+    <button class="rail-btn" id="rail-search" type="button" aria-label="Buscar conversaciones (Ctrl+K)" data-tip="Buscar conversaciones (Ctrl+K)"><svg class="ic" width="18" height="18"><use href="#i-search"/></svg></button>
+    <button class="rail-btn" id="rail-notes" type="button" aria-label="Buscar en notas" data-tip="Buscar en notas"><svg class="ic" width="18" height="18"><use href="#i-notes"/></svg></button>
+    <span class="rail-spacer"></span>
+    <button class="rail-btn" id="rail-toggle" type="button" aria-label="Expandir barra lateral" aria-controls="sidebar" aria-expanded="false" data-tip="Expandir barra lateral"><svg class="ic" width="18" height="18"><use href="#i-panel"/></svg></button>
+    <form method="post" action="/chat/logout"><button class="rail-btn" type="submit" aria-label="Cerrar sesión" data-tip="Cerrar sesión"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg></button></form>
+    <span class="rail-avatar" title="Memia">M</span>
+  </nav>
+
+  <!-- ChatSidebar: expandable panel -->
+  <aside id="sidebar" class="sidebar" aria-label="Conversaciones">
+    <div class="side-head">
+      <div class="brand">Memia <span class="accent">· AI</span></div>
+      <button class="icon-btn" id="side-close" type="button" aria-label="Contraer barra lateral" title="Contraer barra lateral"><svg class="ic" width="18" height="18"><use href="#i-panel"/></svg></button>
+    </div>
+    <button id="new-chat" class="new-btn" type="button"><svg class="ic" width="18" height="18"><use href="#i-plus"/></svg>Nueva conversación</button>
+    <label class="side-search"><svg class="ic" width="18" height="18"><use href="#i-search"/></svg><span class="sr">Buscar conversaciones</span>
+      <input id="conv-search" type="search" placeholder="Buscar conversaciones" autocomplete="off" aria-keyshortcuts="Control+K"><kbd>Ctrl K</kbd></label>
+    <div class="convs" id="convs" role="navigation" aria-label="Historial de conversaciones">
+      <div id="conv-groups"></div>
+      <p id="conv-empty" class="conv-empty" hidden>Aún no hay conversaciones guardadas.</p>
+      <p id="conv-nomatch" class="conv-empty" hidden>Sin coincidencias.</p>
+    </div>
+    <div class="side-foot">
+      <p class="privacy">Privado. Los datos sensibles se ocultan automáticamente antes de procesarse.</p>
+      <div class="profile"><span class="brand-mark sm">M</span><span class="profile-name">Memia</span>
+        <form method="post" action="/chat/logout"><button class="ghost-btn" type="submit"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg>Salir</button></form></div>
+    </div>
+  </aside>
+  <div id="scrim" class="scrim" hidden></div>
+
+  <main class="main" id="main">
+    <!-- ChatHeader -->
+    <header class="header">
+      <button class="icon-btn mobile-only" id="menu" type="button" aria-label="Abrir menú" aria-controls="sidebar" aria-expanded="false"><svg class="ic" width="18" height="18"><use href="#i-menu"/></svg></button>
+      <svg class="ic head-ic" width="18" height="18" aria-hidden="true"><use href="#i-chat"/></svg>
+      <h1 id="head-title">Chat</h1><p class="head-sub">Tu asistente de notas y conocimiento</p>
+      <div class="head-actions">
+        <span id="memory-badge" class="badge" hidden>Solo memoria</span>
+        <button class="head-search" id="head-search" type="button" aria-label="Buscar conversaciones (Ctrl+K)"><svg class="ic" width="16" height="16"><use href="#i-search"/></svg><span>Buscar conversaciones…</span></button>
+      </div>
+    </header>
+
+    <section id="scroller" class="scroller">
+      <div id="thread" class="thread" aria-live="polite" aria-relevant="additions">
+        <div id="empty" class="empty" hidden>
+          <h2>Hola, Jose</h2>
+          <p class="muted">Pregúntame sobre tus notas, busca algo o guarda una idea nueva.</p>
+          <div class="suggestions">
+            <button class="sugg" data-mode="answer" type="button">¿Qué notas tengo sobre la PBX?</button>
+            <button class="sugg" data-mode="search" type="button">Buscar «backups»</button>
+            <button class="sugg" data-mode="answer" type="button">Resume lo último que guardé</button>
+            <button class="sugg" data-mode="answer" type="button">¿Qué pendientes tengo?</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ChatComposer -->
+    <form id="composer" class="composer">
+      <div class="composer-box">
+        <div class="composer-row">
+          <label class="sr" for="input">Mensaje</label>
+          <textarea id="input" rows="1" placeholder="Escribe tu pregunta…" enterkeyhint="send"></textarea>
+          <span class="kbd-hint">Shift + Enter para nueva línea</span>
+          <button id="send" class="send" type="submit" aria-label="Enviar" disabled><svg class="ic" width="18" height="18"><use href="#i-send"/></svg></button>
+        </div>
+      <div class="composer-bar">
+        <div class="chips" role="radiogroup" aria-label="Modo">
+          <button class="chip mode active" role="radio" aria-checked="true" data-mode="answer" type="button"><svg class="ic" width="14" height="14"><use href="#i-chat"/></svg>Preguntar</button>
+          <button class="chip mode" role="radio" aria-checked="false" data-mode="search" type="button"><svg class="ic" width="14" height="14"><use href="#i-search"/></svg>Buscar en notas</button>
+          <button class="chip mode" role="radio" aria-checked="false" data-mode="ingest" type="button"><svg class="ic" width="14" height="14"><use href="#i-notes"/></svg>Guardar nota</button>
+        </div>
+        <label class="sr" for="project">Proyecto</label>
+        <select id="project" class="proj-select" autocomplete="off" title="Proyecto"><option value="">Todos los proyectos</option></select>
+        <label class="toggle" title="Responder solo con tu memoria, sin IA"><input type="checkbox" id="memory-only"><span>Solo memoria<span class="hide-sm"> (sin IA)</span></span></label>
+      </div>
+      </div>
+      <p class="hint"><span id="session-cost" class="session-cost" hidden></span></p>
+    </form>
+  </main>
+</div>
+<div id="menu-pop" class="pop" role="menu" hidden>
+  <button role="menuitem" type="button" data-act="rename">Renombrar</button>
+  <button role="menuitem" type="button" data-act="delete" class="danger">Eliminar</button>
+</div>
+<div id="toast" class="toast" role="status" hidden></div>
+<script src="/chat/static/app.js"></script><!--COMMERCIAL_JS--></body></html>

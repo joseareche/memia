@@ -1,0 +1,14 @@
+# Internal TLS in front of the core so the chat talks HTTPS with a pinned CA (as in production).
+{
+	admin off
+	skip_install_trust
+	pki {
+		ca local {
+			name "Memia Dev Local CA"
+		}
+	}
+}
+https://memia-core {
+	tls internal
+	reverse_proxy app:8080
+}

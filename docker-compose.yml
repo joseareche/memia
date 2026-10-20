@@ -1,0 +1,79 @@
+# Memia — local development stack (NOT for production).
+#   cp .env.docker.example .env.docker   # change the dev secrets
+#   docker compose --env-file .env.docker up -d --build
+# Chat:  http://localhost:8093/chat     Admin: http://localhost:8080/admin
+name: memia
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_DB: memia
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set in .env.docker}
+      MEMIA_OWNER_PASSWORD: ${MEMIA_OWNER_PASSWORD:?}
+      MEMIA_APP_PASSWORD: ${MEMIA_APP_PASSWORD:?}
+      MEMIA_DEV_TOKEN: ${MEMIA_DEV_TOKEN:?}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./deploy/docker/initdb:/docker-entrypoint-initdb.d:ro
+      - ./app/migrations:/memia/migrations:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U postgres -d memia"]  # TCP: false during init
+      interval: 3s
+      retries: 40
+    # No published port: PostgreSQL is never exposed outside the compose network.
+
+  app:
+    build: { context: ., dockerfile: deploy/docker/Dockerfile.app }
+    depends_on: { db: { condition: service_healthy } }
+    environment:
+      DEVBRAIN_LISTEN: 0.0.0.0:8080
+      DEVBRAIN_DSN: host=db dbname=memia user=devbrain_app password=${MEMIA_APP_PASSWORD}
+      DEVBRAIN_ADMIN_DSN: host=db dbname=memia user=devbrain_owner password=${MEMIA_OWNER_PASSWORD}
+      DEVBRAIN_ADMIN_ALLOW: ${DEVBRAIN_ADMIN_ALLOW:-127.0.0.1/32,172.16.0.0/12}
+      MEMIA_ADMIN_PASSWORD: ${MEMIA_ADMIN_PASSWORD:?}
+      DEVBRAIN_ACTOR_HMAC_KEY: ${DEVBRAIN_ACTOR_HMAC_KEY:?}
+      DEVBRAIN_CHAT_PROVIDER: openai
+      DEVBRAIN_CHAT_MODEL: ${DEVBRAIN_CHAT_MODEL:-gpt-4o-mini}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      DEVBRAIN_OLLAMA_URL: ${DEVBRAIN_OLLAMA_URL:-}
+      DEVBRAIN_SOFFICE: "off"
+    ports: ["127.0.0.1:8080:8080"]
+
+  tls:
+    image: caddy:2-alpine
+    depends_on: [app]
+    networks:
+      default:
+        aliases: [memia-core]   # the name in the internal TLS certificate
+    volumes:
+      - ./deploy/docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddydata:/data
+      - devca:/ca
+    # Publish only the public root certificate of the local CA for the chat to pin.
+    command: >-
+      sh -c 'caddy run --config /etc/caddy/Caddyfile & R=/data/caddy/pki/authorities/local/root.crt;
+      until [ -s $$R ]; do sleep 1; done; install -m 0644 $$R /ca/root.crt; wait'
+
+  chat:
+    build: { context: ., dockerfile: deploy/docker/Dockerfile.chat }
+    depends_on: [tls]
+    environment:
+      CHAT_LISTEN: 0.0.0.0:8093
+      CHAT_ORIGIN: ${CHAT_ORIGIN:-http://localhost:8093}
+      CHAT_USER: default
+      CHAT_ACTOR_EMAIL: admin@example.com
+      CHAT_DEV_PASSWORD: ${CHAT_DEV_PASSWORD:?}
+      MEMIA_DEV_TOKEN: ${MEMIA_DEV_TOKEN:?}
+      DEVBRAIN_ACTOR_HMAC_KEY: ${DEVBRAIN_ACTOR_HMAC_KEY:?}
+      DEVBRAIN_URL: https://memia-core
+      DEVBRAIN_SERVER_NAME: memia-core
+      DEVBRAIN_CA_FILE: /ca/root.crt
+      STATE_DIRECTORY: /var/lib/memia-chat
+    volumes:
+      - devca:/ca:ro
+      - chatstate:/var/lib/memia-chat
+    ports: ["127.0.0.1:8093:8093"]
+
+volumes: { pgdata: {}, caddydata: {}, devca: {}, chatstate: {} }

@@ -1,0 +1,12 @@
+[
+  {"title": "Decisión: PostgreSQL 17 + pgvector para Acme Webshop", "source": "note", "project": "acme-webshop",
+   "text": "Decidimos usar PostgreSQL 17 con pgvector en lugar de una base vectorial separada. Motivo: un solo backup, RLS por tenant y menos piezas que operar. Revisar en 6 meses."},
+  {"title": "Convención de commits del equipo", "source": "note", "project": "acme-webshop",
+   "text": "Usamos Conventional Commits (feat:, fix:, chore:). Cada PR necesita al menos una revisión y tests verdes en CI antes de hacer merge a main."},
+  {"title": "Despliegue de la API demo", "source": "note", "project": "demo-api",
+   "text": "La API demo se despliega con docker compose en staging.example.com. Variables en .env (nunca en el repo). El healthcheck es GET /healthz y la migración se corre antes de reiniciar el servicio."},
+  {"title": "Error 502 tras actualizar nginx", "source": "cursor", "project": "demo-api",
+   "text": "Usuario: después de actualizar nginx la API responde 502.\nAsistente: el upstream apuntaba al puerto viejo 3000; la app ahora escucha en 8081. Se corrigió proxy_pass y se recargó nginx con nginx -t && systemctl reload nginx. Verificado con curl -I."},
+  {"title": "Reunión de planificación sprint 14", "source": "note", "project": "acme-webshop",
+   "text": "Pendientes: agregar paginación al listado de pedidos; migrar imágenes a almacenamiento S3 compatible; documentar el flujo de devoluciones. Responsable: equipo demo."}
+]

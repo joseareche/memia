@@ -1,0 +1,17 @@
+.env
+*.env
+!.env.example
+*.pem
+*.key
+*.crt
+*.p12
+*.dump
+*.sql.gz
+backup/
+bin/
+devbrain-chat
+app/devbrain
+__pycache__/
+*.log
+devbrainchat
+.env.docker

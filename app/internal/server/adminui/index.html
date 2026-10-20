@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>DevBrain · Panel de uso</title>
+<link rel="stylesheet" href="/admin/static/admin.css"><script src="/admin/static/admin.js" defer></script></head>
+<body>
+<header class="top">
+ <div class="brand"><img src="/admin/static/logo-mark.png" alt="" class="logo"><div><b>Memia</b><span class="sub">DevBrain · panel privado de uso</span></div></div>
+ <nav class="nav"><a href="/admin" class="on">Uso</a><a href="/admin/users">Usuarios y módulos</a></nav>
+ <div class="right"><span id="updated" class="muted"></span><button id="refresh" class="btn" type="button">Actualizar</button></div>
+</header>
+<main>
+<section class="filters card" aria-label="Filtros">
+ <div class="seg" id="period" role="group" aria-label="Periodo">
+  <button type="button" data-p="today">Hoy</button><button type="button" data-p="7d">7 días</button><button type="button" data-p="30d" class="on">30 días</button>
+ </div>
+ <label>Tenant <select id="f-tenant"><option value="">Todos</option></select></label>
+ <label>Proyecto <select id="f-project"><option value="">Todos</option></select></label>
+ <span class="muted hint" id="f-hint">El proyecto filtra contenido y pendientes; el consumo se registra por tenant.</span>
+</section>
+<section class="kpis" id="kpis"></section>
+<section class="card">
+ <div class="head"><h2>Coste por día <span class="muted">(30 días, USD estimado)</span></h2>
+  <div class="toggles"><label><input type="checkbox" id="t-import"> Incluir importación</label><label><input type="checkbox" id="t-log"> Escala logarítmica</label></div></div>
+ <div id="chart-days" class="chart"></div>
+ <p class="muted note" id="chart-note"></p>
+</section>
+<section class="card"><h2>Por operación <span class="muted" id="ops-p"></span></h2><div id="ops" class="scroll"></div></section>
+<section class="grid2">
+ <div class="card"><h2>Por tenant <span class="muted" id="ten-p"></span></h2><div id="tenants" class="scroll"></div></div>
+ <div class="card"><h2>Caché de embeddings</h2><div id="cache" class="cache"></div></div>
+</section>
+<section class="grid3">
+ <div class="card"><h2>Índice activo</h2><div id="index"></div></div>
+ <div class="card"><h2>Redacciones por tipo</h2><div id="redactions"></div></div>
+ <div class="card"><h2>Errores y rechazos</h2><div id="errors"></div></div>
+</section>
+<section class="card"><h2>Solicitudes recientes <span class="muted">(sin contenido)</span></h2><div id="recent" class="scroll"></div></section>
+<p class="fine" id="prices"></p>
+</main></body></html>

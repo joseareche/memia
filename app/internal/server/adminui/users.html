@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>DevBrain · Usuarios y módulos</title>
+<link rel="stylesheet" href="/admin/static/admin.css"><script src="/admin/static/users.js" defer></script></head>
+<body>
+<header class="top">
+ <div class="brand"><img src="/admin/static/logo-mark.png" alt="" class="logo"><div><b>Memia · AI</b><span class="sub">DevBrain · usuarios y módulos</span></div></div>
+ <nav class="nav"><a href="/admin">Uso</a><a href="/admin/users" class="on">Usuarios y módulos</a></nav>
+ <div class="right"><span id="msg" class="muted" role="status"></span></div>
+</header>
+<main>
+<section class="card">
+ <div class="head"><h2>Usuarios <span class="muted">— solo los habilitados pueden iniciar sesión en /chat (Google)</span></h2></div>
+ <form id="new" class="newu" autocomplete="off">
+  <label>Correo Google <input id="n-email" type="email" required maxlength="254" placeholder="persona@example.com"></label>
+  <label>Nombre <input id="n-name" type="text" maxlength="120" placeholder="opcional"></label>
+  <label>Tenant <select id="n-tenant"></select></label>
+  <button class="btn" type="submit">Agregar usuario</button>
+  <span class="muted hint">Por defecto solo recibe el módulo Chat. «Sin tenant» = no ve ninguna base de conocimiento.</span>
+ </form>
+ <div id="users" class="scroll"></div>
+</section>
+<section class="card"><h2>Módulos</h2><div id="mods"></div></section>
+<section class="card"><h2>Auditoría de cambios <span class="muted">(últimos 200)</span></h2><div id="audit" class="scroll"></div></section>
+</main></body></html>
